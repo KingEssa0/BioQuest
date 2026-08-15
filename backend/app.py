@@ -6,6 +6,7 @@ from pathlib import Path
 import anthropic
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
+from flask.logging import has_level_handler
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
