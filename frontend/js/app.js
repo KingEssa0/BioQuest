@@ -64,7 +64,7 @@ function restoreSession() {
 // ---------------------------------------------------------------------------
 
 function bindEvents() {
-<<<<<<< Updated upstream
+// Updated upstream
   // Helper: attach a listener only if the element exists, so a missing ID
   // in index.html throws a clear console warning instead of crashing the app.
   function on(id, event, handler) {
@@ -83,14 +83,14 @@ function bindEvents() {
   on("btn-new-quest", "click", onNewQuest);
   on("btn-leaderboard", "click", onShowLeaderboard);
   on("btn-logout", "click", onLogout);
-=======
+
   // Quest screen buttons
   document.getElementById("btn-new-quest").addEventListener("click", onNewQuest);
   document.getElementById("btn-leaderboard").addEventListener("click", onShowLeaderboard);
   
   // Theme
   document.getElementById("btn-theme").addEventListener("click", toggleTheme);
->>>>>>> Stashed changes
+// Stashed changes
 
   // Photo submission
   on("form-submit", "submit", onSubmitPhoto);
