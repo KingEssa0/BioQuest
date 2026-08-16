@@ -1,5 +1,4 @@
 import base64
-import json
 import os
 
 import anthropic
@@ -41,8 +40,25 @@ VERIFY_SCHEMA = {
 }
 
 
+# Tool definition used to force structured JSON output via tool_use.
+# Claude is required to call this tool, so the response is always
+# schema-valid — no regex stripping or retry logic needed.
+VERIFY_TOOL = {
+    "name": "verify_photo",
+    "description": (
+        "Record whether a submitted photo matches the scavenger hunt target "
+        "and provide educational facts about what is shown."
+    ),
+    "input_schema": VERIFY_SCHEMA,
+}
+
+
 def verify_submission(image_bytes: bytes, media_type: str, target: str) -> dict:
     """Ask Claude whether the photo shows `target`, and get facts about it.
+
+    Uses tool_use with tool_choice to guarantee schema-valid JSON output —
+    Claude is forced to call the verify_photo tool, so the response always
+    matches VERIFY_SCHEMA without any post-processing.
 
     Raises anthropic errors on failure — callers should catch them and
     respond gracefully (see app.py). A short timeout keeps a slow/hung
@@ -53,11 +69,10 @@ def verify_submission(image_bytes: bytes, media_type: str, target: str) -> dict:
     response = get_client().with_options(timeout=20.0, max_retries=1).messages.create(
         model=MODEL,
         max_tokens=1024,
-        # Simple yes/no classification + a couple sentences of facts doesn't
-        # need extended reasoning, and skipping it keeps latency low and
-        # predictable for a live demo.
-        thinking={"type": "disabled"},
-        output_config={"format": {"type": "json_schema", "schema": VERIFY_SCHEMA}},
+        tools=[VERIFY_TOOL],
+        # Force Claude to always call verify_photo — eliminates any chance of
+        # a free-text fallback that would break json parsing downstream.
+        tool_choice={"type": "tool", "name": "verify_photo"},
         messages=[
             {
                 "role": "user",
@@ -83,5 +98,6 @@ def verify_submission(image_bytes: bytes, media_type: str, target: str) -> dict:
         ],
     )
 
-    text = next(b.text for b in response.content if b.type == "text")
-    return json.loads(text)
+    # With tool_choice forced, the first tool_use block always contains our result.
+    tool_block = next(b for b in response.content if b.type == "tool_use")
+    return tool_block.input

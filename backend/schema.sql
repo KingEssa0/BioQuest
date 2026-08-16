@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS submissions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     quest_id INTEGER NOT NULL,
     image_filename TEXT NOT NULL,
+    image_hash TEXT NOT NULL,
     verified INTEGER NOT NULL,
     facts TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

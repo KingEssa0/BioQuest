@@ -63,23 +63,34 @@ function restoreSession() {
 // ---------------------------------------------------------------------------
 
 function bindEvents() {
+  // Helper: attach a listener only if the element exists, so a missing ID
+  // in index.html throws a clear console warning instead of crashing the app.
+  function on(id, event, handler) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener(event, handler);
+    } else {
+      console.warn(`[BioQuest] bindEvents: element #${id} not found in DOM`);
+    }
+  }
+
   // Login form
-  document.getElementById("form-login").addEventListener("submit", onLogin);
+  on("form-login", "submit", onLogin);
 
   // Quest screen buttons
-  document.getElementById("btn-new-quest").addEventListener("click", onNewQuest);
-  document.getElementById("btn-leaderboard").addEventListener("click", onShowLeaderboard);
-  document.getElementById("btn-logout").addEventListener("click", onLogout);
+  on("btn-new-quest", "click", onNewQuest);
+  on("btn-leaderboard", "click", onShowLeaderboard);
+  on("btn-logout", "click", onLogout);
 
   // Photo submission
-  document.getElementById("form-submit").addEventListener("submit", onSubmitPhoto);
+  on("form-submit", "submit", onSubmitPhoto);
 
   // Result screen
-  document.getElementById("btn-next-quest").addEventListener("click", onNewQuest);
-  document.getElementById("btn-back-quest").addEventListener("click", () => showScreen("screen-quest"));
+  on("btn-next-quest", "click", onNewQuest);
+  on("btn-back-quest", "click", () => showScreen("screen-quest"));
 
   // Leaderboard screen
-  document.getElementById("btn-back-from-leaderboard").addEventListener("click", () => showScreen("screen-quest"));
+  on("btn-back-from-leaderboard", "click", () => showScreen("screen-quest"));
 }
 
 // ---------------------------------------------------------------------------
@@ -211,17 +222,22 @@ function renderQuest(quest) {
   const emptyState = document.getElementById("quest-empty");
 
   if (!quest) {
-    questCard.hidden = true;
-    emptyState.hidden = false;
+    questCard.style.display = "none";
+    emptyState.style.display = "block";
     return;
   }
 
-  questCard.hidden = false;
-  emptyState.hidden = true;
+  questCard.style.display = "block";
+  emptyState.style.display = "none";
 
   document.getElementById("txt-target").textContent = quest.target;
   document.getElementById("txt-category").textContent = quest.category.replace("_", " ");
-  document.getElementById("txt-difficulty").textContent = quest.difficulty;
+
+  // Difficulty badge
+  const badge = document.getElementById("badge-difficulty");
+  badge.textContent = quest.difficulty;
+  badge.className = `badge badge-${quest.difficulty}`;
+
   document.getElementById("txt-progress").textContent = `${quest.progress} / ${quest.target_count}`;
   document.getElementById("txt-points-reward").textContent = quest.points_reward;
 
@@ -260,13 +276,13 @@ function renderResult(result) {
 
   // Show/hide quest-completed banner and action buttons
   if (result.quest_completed) {
-    completedBanner.hidden = false;
-    btnNext.hidden = false;
-    btnBack.hidden = true;
+    completedBanner.style.display = "block";
+    btnNext.style.display = "inline-block";
+    btnBack.style.display = "none";
   } else {
-    completedBanner.hidden = true;
-    btnNext.hidden = true;
-    btnBack.hidden = false;
+    completedBanner.style.display = "none";
+    btnNext.style.display = "none";
+    btnBack.style.display = "inline-block";
   }
 
   // Keep quest card in sync for when user navigates back
@@ -317,7 +333,7 @@ function renderLeaderboard(rows) {
  */
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((el) => {
-    el.hidden = el.id !== id;
+    el.classList.toggle("active", el.id === id);
   });
 }
 

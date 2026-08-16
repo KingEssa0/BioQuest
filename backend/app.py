@@ -1,4 +1,5 @@
 import logging
+import hashlib
 import os
 import uuid
 from pathlib import Path
@@ -6,7 +7,6 @@ from pathlib import Path
 import anthropic
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
-from flask.logging import has_level_handler
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
@@ -61,6 +61,8 @@ def get_or_create_user():
     username = (data.get("username") or "").strip()
     if not username:
         return jsonify({"error": "username is required"}), 400
+    if len(username) > 30:
+        return jsonify({"error": "username must be 30 characters or fewer"}), 400
 
     conn = db.get_db()
     user = conn.execute(
@@ -162,6 +164,16 @@ def submit_photo():
     if not image_bytes:
         return jsonify({"error": "the uploaded image was empty"}), 400
 
+    # Reject duplicate images for the same quest — hash the bytes and check
+    # against all previous submissions for this quest.
+    image_hash = hashlib.sha256(image_bytes).hexdigest()
+    duplicate = conn.execute(
+        "SELECT id FROM submissions WHERE quest_id = ? AND image_hash = ?",
+        (quest_id, image_hash),
+    ).fetchone()
+    if duplicate:
+        return jsonify({"error": "You already submitted that photo for this quest. Try a different one!"}), 400
+
     filename = secure_filename(f"{uuid.uuid4().hex}{ALLOWED_MEDIA_TYPES[media_type]}")
     (UPLOAD_DIR / filename).write_bytes(image_bytes)
 
@@ -179,9 +191,9 @@ def submit_photo():
         return jsonify({"error": "Something went wrong verifying that photo. Please try again."}), 500
 
     conn.execute(
-        "INSERT INTO submissions (quest_id, image_filename, verified, facts) "
-        "VALUES (?, ?, ?, ?)",
-        (quest_id, filename, int(result["matches"]), result["facts"]),
+        "INSERT INTO submissions (quest_id, image_filename, image_hash, verified, facts) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (quest_id, filename, image_hash, int(result["matches"]), result["facts"]),
     )
 
     quest_completed = False
