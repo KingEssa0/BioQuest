@@ -6,9 +6,7 @@
  * Change BASE_URL if the backend is hosted elsewhere.
  */
 
-const BASE_URL = "http://localhost:5050";
-
-// ---------------------------------------------------------------------------
+const BASE_URL = "https://glorious-rotary-phone-jrpp47rr47r2p65v-5050.app.github.dev/";// ---------------------------------------------------------------------------
 // USERS
 // ---------------------------------------------------------------------------
 

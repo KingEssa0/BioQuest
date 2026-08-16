@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>BioQuest</title>
+
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+
+  <!-- =========================================================
+       QUEST DASHBOARD
+       ========================================================= -->
+
+  <div class="screen" id="screen-quest">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div>
+        <h1>BioQuest</h1>
+        <p>
+          Welcome,
+          <span id="txt-username"></span>!
+        </p>
+      </div>
+
+      <div class="dashboard-actions">
+        <button id="btn-new-quest" type="button">
+          New Quest
+        </button>
+
+        <button id="btn-leaderboard" type="button">
+          Leaderboard
+        </button>
+
+        <button id="btn-theme">🌙 Dark Mode</button>
+      </div>
+    </header>
+
+
+    <!-- =======================================================
+         CURRENT QUEST
+         ======================================================= -->
+
+    <main>
+
+      <section id="quest-card">
+
+        <div class="quest-header">
+          <h2>Current Quest</h2>
+        </div>
+
+        <div class="quest-content">
+
+          <div class="quest-target">
+            <span class="quest-label">Find:</span>
+
+            <p id="txt-target"></p>
+          </div>
+
+          <div class="quest-info">
+
+            <div class="quest-info-item">
+              <p><strong>Category:</strong> <span id="txt-category"></span></p>
+            </div>
+
+            <div class="quest-info-item">
+              <p><strong>Difficulty:</strong> <span id="txt-difficulty"></span></p>
+            </div>
+
+            <div class="quest-info-item">
+              <p><strong>Progress:</strong> <span id="txt-progress"></span></p>
+            </div>
+
+            <div class="quest-info-item">
+              <p><strong>Points:</strong> <span id="txt-points-reward"></span></p>
+            </div>
+
+          </div>
+
+
+          <!-- Progress bar -->
+
+          <div class="progress-container">
+
+            <div
+              id="progress-bar"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            ></div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           NO ACTIVE QUEST
+           ===================================================== -->
+
+      <section id="quest-empty" hidden>
+
+        <h2>No Active Quest</h2>
+
+        <p>
+          You don't have an active quest yet.
+        </p>
+
+        <button
+          id="btn-new-quest-empty"
+          type="button"
+        >
+          Start a Quest
+        </button>
+
+      </section>
+
+
+      <!-- =====================================================
+           PHOTO SUBMISSION
+           ===================================================== -->
+
+      <section class="submission-card">
+
+        <h2>Complete Your Quest</h2>
+
+        <p>
+          Find the target in the real world and take a photo.
+        </p>
+
+        <form id="form-submit">
+
+          <label for="input-photo">
+            Choose a photo
+          </label>
+
+          <input
+            id="input-photo"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+          />
+
+          <button
+            id="btn-submit"
+            type="submit"
+          >
+            Submit Photo
+          </button>
+
+        </form>
+
+        <span
+          id="error-submit"
+          class="error-message"
+          role="alert"
+        ></span>
+
+      </section>
+
+
+      <!-- Quest errors -->
+
+      <span
+        id="error-quest"
+        class="error-message"
+        role="alert"
+      ></span>
+
+    </main>
+
+  </div>
+
+
+  <!-- =========================================================
+       RESULT SCREEN
+       ========================================================= -->
+
+  <div
+    class="screen"
+    id="screen-result"
+    hidden
+  >
+
+    <main class="result-container">
+
+      <section class="result-card">
+
+        <div
+          id="result-icon"
+          class="result-icon"
+        ></div>
+
+        <h1 id="result-heading"></h1>
+
+        <p id="result-facts"></p>
+
+        <div
+          id="result-points"
+          class="result-points"
+        ></div>
+
+
+        <!-- Shown when quest is completed -->
+
+        <div
+          id="result-completed"
+          hidden
+        >
+          <h2>🎉 Quest Completed!</h2>
+
+          <p>
+            Excellent work! You've completed this BioQuest.
+          </p>
+        </div>
+
+
+        <!-- Buttons -->
+
+        <div class="result-actions">
+
+          <button
+            id="btn-next-quest"
+            type="button"
+            hidden
+          >
+            Next Quest
+          </button>
+
+          <button
+            id="btn-back-quest"
+            type="button"
+          >
+            Back to Quest
+          </button>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- =========================================================
+       LEADERBOARD
+       ========================================================= -->
+
+  <div
+    class="screen"
+    id="screen-leaderboard"
+    hidden
+  >
+
+    <main class="leaderboard-container">
+
+      <section class="leaderboard-card">
+
+        <header class="leaderboard-header">
+
+          <div>
+            <h1>Leaderboard</h1>
+
+            <p>
+              Top BioQuest explorers
+            </p>
+          </div>
+
+        </header>
+
+
+        <!-- Leaderboard table -->
+
+        <div class="table-container">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Points</th>
+                <th>Quests</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="leaderboard-body">
+              <!-- JavaScript fills this -->
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <span
+          id="error-leaderboard"
+          class="error-message"
+          role="alert"
+        ></span>
+
+
+        <button
+          id="btn-back-from-leaderboard"
+          type="button"
+        >
+          Back
+        </button>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+       ========================================================= -->
+
+  <script
+    type="module"
+    src="./js/app.js"
+  ></script>
+
+</body>
+</html>

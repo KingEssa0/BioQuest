@@ -37,6 +37,7 @@ let state = {
 // ---------------------------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
+  restoreTheme();
   restoreSession();
   bindEvents();
 });
@@ -63,6 +64,7 @@ function restoreSession() {
 // ---------------------------------------------------------------------------
 
 function bindEvents() {
+<<<<<<< Updated upstream
   // Helper: attach a listener only if the element exists, so a missing ID
   // in index.html throws a clear console warning instead of crashing the app.
   function on(id, event, handler) {
@@ -81,6 +83,14 @@ function bindEvents() {
   on("btn-new-quest", "click", onNewQuest);
   on("btn-leaderboard", "click", onShowLeaderboard);
   on("btn-logout", "click", onLogout);
+=======
+  // Quest screen buttons
+  document.getElementById("btn-new-quest").addEventListener("click", onNewQuest);
+  document.getElementById("btn-leaderboard").addEventListener("click", onShowLeaderboard);
+  
+  // Theme
+  document.getElementById("btn-theme").addEventListener("click", toggleTheme);
+>>>>>>> Stashed changes
 
   // Photo submission
   on("form-submit", "submit", onSubmitPhoto);
@@ -93,47 +103,32 @@ function bindEvents() {
   on("btn-back-from-leaderboard", "click", () => showScreen("screen-quest"));
 }
 
-// ---------------------------------------------------------------------------
-// Handlers
-// ---------------------------------------------------------------------------
-
-/**
- * Login: call getOrCreateUser, save session, load quest.
- */
-async function onLogin(e) {
-  e.preventDefault();
-  const username = document.getElementById("input-username").value.trim();
-  if (!username) return;
-
-  setLoading("btn-login", true);
-  try {
-    const user = await getOrCreateUser(username);
-    state.userId = user.id;
-    state.username = user.username;
-    localStorage.setItem("bq_userId", user.id);
-    localStorage.setItem("bq_username", user.username);
-
-    showScreen("screen-quest");
-    loadQuest();
-  } catch (err) {
-    showError("error-login", err.message);
-  } finally {
-    setLoading("btn-login", false);
-  }
-}
-
 /**
  * Load the user's active quest (or prompt them to start one).
  */
 async function loadQuest() {
+  console.log("1. loadQuest started");
+
   setLoading("btn-new-quest", true);
+
   try {
+    console.log("2. requesting active quest...");
+
     const quest = await getActiveQuest(state.userId);
+
+    console.log("3. quest response:", quest);
+
     state.quest = quest;
+
+    console.log("4. rendering quest...");
     renderQuest(quest);
+
+    console.log("5. renderQuest finished");
   } catch (err) {
+    console.error("LOAD QUEST ERROR:", err);
     showError("error-quest", err.message);
   } finally {
+    console.log("6. loadQuest finished");
     setLoading("btn-new-quest", false);
   }
 }
@@ -347,6 +342,41 @@ function showScreen(id) {
 function showError(elementId, message) {
   const el = document.getElementById(elementId);
   if (el) el.textContent = message;
+}
+
+// ---------------------------------------------------------------------------
+// Theme
+// ---------------------------------------------------------------------------
+
+function toggleTheme() {
+  document.body.classList.toggle("dark-theme");
+
+  const isDark = document.body.classList.contains("dark-theme");
+
+  localStorage.setItem("bq_theme", isDark ? "dark" : "light");
+
+  updateThemeButton();
+}
+
+function updateThemeButton() {
+  const button = document.getElementById("btn-theme");
+  if (!button) return;
+
+  const isDark = document.body.classList.contains("dark-theme");
+
+  button.textContent = isDark
+    ? "☀️ Light Mode"
+    : "🌙 Dark Mode";
+}
+
+function restoreTheme() {
+  const savedTheme = localStorage.getItem("bq_theme");
+
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-theme");
+  }
+
+  updateThemeButton();
 }
 
 /**

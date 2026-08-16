@@ -1,0 +1,541 @@
+/* =========================================================
+   BioQuest — Nature Theme
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+
+  /* Light mint background like the reference */
+  background: #d5f0e0;
+  color: #123524;
+}
+
+/* =========================================================
+   SCREEN LAYOUT
+   ========================================================= */
+
+.screen {
+  width: min(1000px, 92%);
+  margin: 0 auto;
+  padding: 32px 0 60px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 34px;
+  color: #123524;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 25px;
+  color: #123524;
+}
+
+h3 {
+  color: #123524;
+}
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+#screen-login {
+  max-width: 560px;
+}
+
+#screen-login h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+#form-login {
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(18, 53, 36, 0.08);
+}
+
+#input-username {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #a9d5b9;
+  border-radius: 10px;
+  background: white;
+  color: #123524;
+  font-size: 16px;
+}
+
+#input-username:focus {
+  outline: 2px solid #55c878;
+  border-color: #55c878;
+}
+
+#btn-login {
+  width: 100%;
+  margin-top: 12px;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 11px 18px;
+
+  background: #55c878;
+  color: #123524;
+
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+button:hover {
+  background: #45b96a;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(18, 53, 36, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Secondary buttons */
+
+#btn-leaderboard,
+#btn-back-from-leaderboard,
+#btn-back-quest {
+  background: #ffffff;
+  color: #123524;
+  border: 1px solid #b5dcc4;
+}
+
+#btn-leaderboard:hover,
+#btn-back-from-leaderboard:hover,
+#btn-back-quest:hover {
+  background: #edf8f1;
+}
+
+/* =========================================================
+   QUEST SCREEN HEADER
+   ========================================================= */
+
+#screen-quest > #txt-username {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+#screen-quest > #txt-username::before {
+  content: "Welcome, ";
+}
+
+#btn-new-quest,
+#btn-leaderboard,
+#btn-logout {
+  margin-right: 6px;
+  margin-bottom: 20px;
+}
+
+/* =========================================================
+   QUEST CARD
+   ========================================================= */
+
+#quest-card {
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 20px;
+
+  padding: 30px;
+
+  box-shadow: 0 5px 18px rgba(18, 53, 36, 0.08);
+}
+
+#quest-card p {
+  margin: 8px 0;
+}
+
+#txt-target {
+  font-size: 27px;
+  font-weight: bold;
+  color: #123524;
+  margin-top: 0 !important;
+  margin-bottom: 18px !important;
+}
+
+#txt-category,
+#txt-difficulty,
+#txt-progress,
+#txt-points-reward {
+  font-weight: 500;
+}
+
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
+
+#progress-bar {
+  width: 0%;
+  height: 12px;
+
+  margin-top: 20px;
+
+  background: #55c878;
+  border-radius: 999px;
+
+  transition: width 0.4s ease;
+}
+
+#progress-bar[aria-valuenow="0"] {
+  background: #b9dfc8;
+}
+
+/* =========================================================
+   EMPTY QUEST
+   ========================================================= */
+
+#quest-empty {
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 20px;
+
+  padding: 25px;
+  margin-bottom: 25px;
+
+  color: #123524;
+}
+
+/* =========================================================
+   SUBMISSION AREA
+   ========================================================= */
+
+#form-submit {
+  margin-top: 28px;
+
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 20px;
+
+  padding: 25px;
+}
+
+#form-submit::before {
+  content: "Complete Your Quest";
+  display: block;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  margin-bottom: 5px;
+  color: #123524;
+}
+
+#form-submit::after {
+  content: "Find the target in the real world and take a photo.";
+  display: block;
+
+  margin-bottom: 18px;
+  color: #123524;
+}
+
+#input-photo {
+  margin-right: 15px;
+  color: #123524;
+}
+
+/* =========================================================
+   ERROR MESSAGES
+   ========================================================= */
+
+#error-login,
+#error-quest,
+#error-submit,
+#error-leaderboard {
+  display: block;
+
+  margin-top: 10px;
+
+  color: #a33a32;
+  font-weight: bold;
+}
+
+/* =========================================================
+   RESULT SCREEN
+   ========================================================= */
+
+#screen-result {
+  text-align: center;
+}
+
+#result-icon {
+  font-size: 60px;
+  margin-bottom: 10px;
+}
+
+#result-heading {
+  font-size: 32px;
+  color: #123524;
+}
+
+#result-facts {
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 20px;
+
+  padding: 25px;
+  margin: 20px 0;
+
+  text-align: left;
+}
+
+#result-points {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2d9b55;
+}
+
+#result-completed {
+  background: #c6ead4;
+  border: 1px solid #91cba7;
+
+  border-radius: 15px;
+  padding: 18px;
+
+  margin: 20px 0;
+
+  font-weight: bold;
+}
+
+/* =========================================================
+   LEADERBOARD
+   ========================================================= */
+
+#screen-leaderboard {
+  max-width: 800px;
+}
+
+#screen-leaderboard table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  overflow: hidden;
+
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 20px;
+
+  box-shadow: 0 5px 18px rgba(18, 53, 36, 0.08);
+}
+
+#screen-leaderboard th,
+#screen-leaderboard td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+#screen-leaderboard th {
+  background: #c6ead4;
+  color: #123524;
+  font-weight: bold;
+}
+
+#screen-leaderboard tr:not(:last-child) td {
+  border-bottom: 1px solid #c8e6d3;
+}
+
+#screen-leaderboard .current-user {
+  background: #bce6ca;
+  font-weight: bold;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .screen {
+    width: 92%;
+    padding-top: 20px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  #quest-card {
+    padding: 22px;
+  }
+
+  #txt-target {
+    font-size: 23px;
+  }
+
+  #btn-new-quest,
+  #btn-leaderboard,
+  #btn-logout {
+    margin-bottom: 8px;
+  }
+
+  #form-submit {
+    padding: 20px;
+  }
+
+  #input-photo {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  #btn-submit {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   LIGHT / DARK THEME
+   ========================================================= */
+
+/* Default = Light Theme */
+
+body {
+  background: #d5f0e0;
+  color: #123524;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+#quest-card,
+#quest-empty,
+#form-submit,
+#result-facts,
+#screen-leaderboard table,
+#form-login {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
+body.dark-theme {
+  background: #081c14;
+  color: #f2fff6;
+}
+
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme #txt-target,
+body.dark-theme #result-heading,
+body.dark-theme #screen-quest > #txt-username {
+  color: #f2fff6;
+}
+
+body.dark-theme #quest-card,
+body.dark-theme #quest-empty,
+body.dark-theme #form-submit,
+body.dark-theme #result-facts,
+body.dark-theme #screen-leaderboard table,
+body.dark-theme #form-login {
+  background: #123d2b;
+  border-color: #245c40;
+  color: #f2fff6;
+}
+
+body.dark-theme #input-username {
+  background: #f1fff6;
+  color: #123524;
+  border-color: #4c8f67;
+}
+
+body.dark-theme #btn-leaderboard,
+body.dark-theme #btn-back-from-leaderboard,
+body.dark-theme #btn-back-quest {
+  background: #1c4d37;
+  color: #f2fff6;
+  border-color: #397354;
+}
+
+body.dark-theme #btn-leaderboard:hover,
+body.dark-theme #btn-back-from-leaderboard:hover,
+body.dark-theme #btn-back-quest:hover {
+  background: #286448;
+}
+
+body.dark-theme #screen-leaderboard th {
+  background: #1c4d37;
+  color: #f2fff6;
+}
+
+body.dark-theme #screen-leaderboard tr:not(:last-child) td {
+  border-color: #286448;
+}
+
+body.dark-theme #screen-leaderboard .current-user {
+  background: #286448;
+}
+
+body.dark-theme #result-completed {
+  background: #1b5639;
+  border-color: #397354;
+}
+
+body.dark-theme #result-points {
+  color: #6de493;
+}
+
+/* Theme button */
+
+#btn-theme {
+  background: #ffffff;
+  color: #123524;
+  border: 1px solid #b5dcc4;
+}
+
+#btn-theme:hover {
+  background: #edf8f1;
+}
+
+body.dark-theme #btn-theme {
+  background: #1c4d37;
+  color: #f2fff6;
+  border-color: #397354;
+}
+
+body.dark-theme #btn-theme:hover {
+  background: #286448;
+}

@@ -39,7 +39,7 @@ FLASK_PID=$!
 
 # Wait for the server to actually be answering before tunneling to it.
 for _ in $(seq 1 30); do
-  if curl -sf "http://localhost:$PORT/api/leaderboard" > /dev/null 2>&1; then
+  if curl -sf "http://localhost:$PORT/" > /dev/null 2>&1; then
     break
   fi
   sleep 0.5
