@@ -64,7 +64,6 @@ function restoreSession() {
 // ---------------------------------------------------------------------------
 
 function bindEvents() {
-// Updated upstream
   // Helper: attach a listener only if the element exists, so a missing ID
   // in index.html throws a clear console warning instead of crashing the app.
   function on(id, event, handler) {
@@ -84,13 +83,8 @@ function bindEvents() {
   on("btn-leaderboard", "click", onShowLeaderboard);
   on("btn-logout", "click", onLogout);
 
-  // Quest screen buttons
-  document.getElementById("btn-new-quest").addEventListener("click", onNewQuest);
-  document.getElementById("btn-leaderboard").addEventListener("click", onShowLeaderboard);
-  
   // Theme
-  document.getElementById("btn-theme").addEventListener("click", toggleTheme);
-// Stashed changes
+  on("btn-theme", "click", toggleTheme);
 
   // Photo submission
   on("form-submit", "submit", onSubmitPhoto);
@@ -101,6 +95,32 @@ function bindEvents() {
 
   // Leaderboard screen
   on("btn-back-from-leaderboard", "click", () => showScreen("screen-quest"));
+}
+
+/** Log in or create a user, then load their active quest. */
+async function onLogin(e) {
+  e.preventDefault();
+
+  const input = document.getElementById("input-username");
+  const username = input.value.trim();
+  if (!username) return;
+
+  setLoading("btn-login", true);
+  showError("error-login", "");
+
+  try {
+    const user = await getOrCreateUser(username);
+    state.userId = user.id;
+    state.username = user.username;
+    localStorage.setItem("bq_userId", String(user.id));
+    localStorage.setItem("bq_username", user.username);
+    showScreen("screen-quest");
+    await loadQuest();
+  } catch (err) {
+    showError("error-login", err.message);
+  } finally {
+    setLoading("btn-login", false);
+  }
 }
 
 /**
@@ -230,8 +250,10 @@ function renderQuest(quest) {
 
   // Difficulty badge
   const badge = document.getElementById("badge-difficulty");
-  badge.textContent = quest.difficulty;
-  badge.className = `badge badge-${quest.difficulty}`;
+  if (badge) {
+    badge.textContent = quest.difficulty;
+    badge.className = `badge badge-${quest.difficulty}`;
+  }
 
   document.getElementById("txt-progress").textContent = `${quest.progress} / ${quest.target_count}`;
   document.getElementById("txt-points-reward").textContent = quest.points_reward;
@@ -328,7 +350,9 @@ function renderLeaderboard(rows) {
  */
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((el) => {
-    el.classList.toggle("active", el.id === id);
+    const active = el.id === id;
+    el.classList.toggle("active", active);
+    el.hidden = !active;
   });
 }
 

@@ -19,7 +19,20 @@
        QUEST DASHBOARD
        ========================================================= -->
 
-  <div class="screen" id="screen-quest">
+  <div class="screen" id="screen-login">
+
+    <h1>BioQuest</h1>
+
+    <form id="form-login">
+      <label for="input-username">Choose a username</label>
+      <input id="input-username" name="username" type="text" maxlength="30" required />
+      <button id="btn-login" type="submit">Start Exploring</button>
+      <span id="error-login" class="error-message" role="alert"></span>
+    </form>
+
+  </div>
+
+  <div class="screen" id="screen-quest" hidden>
 
     <!-- Header -->
     <header class="dashboard-header">
@@ -38,6 +51,10 @@
 
         <button id="btn-leaderboard" type="button">
           Leaderboard
+        </button>
+
+        <button id="btn-logout" type="button">
+          Log out
         </button>
 
         <button id="btn-theme">🌙 Dark Mode</button>

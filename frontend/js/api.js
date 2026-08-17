@@ -6,7 +6,11 @@
  * Change BASE_URL if the backend is hosted elsewhere.
  */
 
-const BASE_URL = "https://glorious-rotary-phone-jrpp47rr47r2p65v-5050.app.github.dev/";// ---------------------------------------------------------------------------
+// Use the Flask server that served this page. This also avoids cross-origin
+// requests and works on localhost as well as through a tunnel.
+const BASE_URL = "";
+
+// ---------------------------------------------------------------------------
 // USERS
 // ---------------------------------------------------------------------------
 
