@@ -6,9 +6,10 @@
  * Change BASE_URL if the backend is hosted elsewhere.
  */
 
-// Use the Flask server that served this page. This also avoids cross-origin
-// requests and works on localhost as well as through a tunnel.
-const BASE_URL = "";
+// For local Flask hosting this stays empty and uses the current origin.
+// For a static Netlify deployment, define window.BIOQUEST_API_URL before this
+// module loads, pointing to the public URL of the Flask backend.
+const BASE_URL = (window.BIOQUEST_API_URL || "").replace(/\/$/, "");
 
 // ---------------------------------------------------------------------------
 // USERS
@@ -231,6 +232,9 @@ async function handleResponse(res) {
     }
   }
   if (!contentType.includes("application/json")) {
+    if (res.status === 404 && !BASE_URL) {
+      throw new Error("The API is not running on Netlify. Deploy the Flask backend and set window.BIOQUEST_API_URL to its public URL.");
+    }
     throw new Error(`The server returned an unexpected response (${res.status}). Restart Flask with: python app.py`);
   }
   if (!res.ok) {

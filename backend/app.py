@@ -58,6 +58,11 @@ def index():
     return send_from_directory(app.static_folder, "index.html")
 
 
+@app.get("/health")
+def health():
+    return jsonify({"status": "ok"})
+
+
 @app.get("/dashboard")
 @app.get("/quests")
 @app.get("/leaderboard")
