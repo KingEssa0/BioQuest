@@ -16,7 +16,9 @@ import db
 from ai_vision import verify_submission
 from quests import DIFFICULTY_TIERS, QUEST_POOL, generate_quest
 
-load_dotenv()
+# Resolve the env file from this module, so launching with `python backend/app.py`
+# from the repository root works just like launching it from backend/.
+load_dotenv(Path(__file__).parent / ".env")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("bioquest")
