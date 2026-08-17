@@ -9,11 +9,12 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 import db
 from ai_vision import verify_submission
-from quests import generate_quest
+from quests import DIFFICULTY_TIERS, QUEST_POOL, generate_quest
 
 load_dotenv()
 
@@ -55,6 +56,16 @@ def index():
     return send_from_directory(app.static_folder, "index.html")
 
 
+@app.get("/dashboard")
+@app.get("/quests")
+@app.get("/leaderboard")
+@app.get("/login")
+@app.get("/settings")
+def frontend_route():
+    """Serve the single-page frontend for each browser route."""
+    return send_from_directory(app.static_folder, "index.html")
+
+
 @app.post("/api/users")
 def get_or_create_user():
     data = request.get_json(force=True)
@@ -78,6 +89,57 @@ def get_or_create_user():
     return jsonify(dict(user))
 
 
+def public_user(user):
+    return {
+        "id": user["id"],
+        "email": user["email"],
+        "username": user["username"],
+        "points": user["points"],
+        "quests_completed": user["quests_completed"],
+    }
+
+
+@app.post("/api/auth/signup")
+def signup():
+    data = request.get_json(force=True)
+    email = (data.get("email") or "").strip().lower()
+    username = (data.get("username") or "").strip()
+    password = data.get("password") or ""
+
+    if not email or "@" not in email:
+        return jsonify({"error": "Enter a valid email address."}), 400
+    if not username or len(username) > 30:
+        return jsonify({"error": "Username must be between 1 and 30 characters."}), 400
+    if len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters."}), 400
+
+    conn = db.get_db()
+    existing = conn.execute(
+        "SELECT id FROM users WHERE email = ? OR username = ?", (email, username)
+    ).fetchone()
+    if existing:
+        return jsonify({"error": "That email or username is already in use."}), 409
+
+    cur = conn.execute(
+        "INSERT INTO users (email, username, password_hash) VALUES (?, ?, ?)",
+        (email, username, generate_password_hash(password)),
+    )
+    conn.commit()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (cur.lastrowid,)).fetchone()
+    return jsonify(public_user(user)), 201
+
+
+@app.post("/api/auth/signin")
+def signin():
+    data = request.get_json(force=True)
+    email = (data.get("email") or "").strip().lower()
+    password = data.get("password") or ""
+    user = db.get_db().execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+    if user is None or not user["password_hash"] or not check_password_hash(user["password_hash"], password):
+        return jsonify({"error": "Incorrect email or password."}), 401
+    return jsonify(public_user(user))
+
+
 @app.get("/api/quests/active")
 def get_active_quest():
     user_id = request.args.get("user_id", type=int)
@@ -94,6 +156,61 @@ def get_active_quest():
     return jsonify(dict(quest) if quest else None)
 
 
+@app.get("/api/quests/all")
+def get_active_quests():
+    user_id = request.args.get("user_id", type=int)
+    if not user_id:
+        return jsonify({"error": "user_id is required"}), 400
+
+    conn = db.get_db()
+    quests = conn.execute(
+        "SELECT * FROM quests WHERE user_id = ? AND status = 'active' "
+        "ORDER BY created_at DESC, id DESC",
+        (user_id,),
+    ).fetchall()
+    return jsonify([dict(quest) for quest in quests])
+
+
+@app.get("/api/quests/options")
+def get_quest_options():
+    user_id = request.args.get("user_id", type=int)
+    if not user_id:
+        return jsonify({"error": "user_id is required"}), 400
+
+    conn = db.get_db()
+    active = conn.execute(
+        "SELECT target FROM quests WHERE user_id = ? AND status = 'active'",
+        (user_id,),
+    ).fetchall()
+    excluded = {row["target"] for row in active}
+    options = []
+    for _ in range(6):
+        option = generate_quest(exclude_targets=excluded)
+        excluded.add(option["target"])
+        options.append(option)
+    return jsonify(options)
+
+
+@app.get("/api/users/<int:user_id>/stats")
+def get_user_stats(user_id):
+    conn = db.get_db()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+    if user is None:
+        return jsonify({"error": "user not found"}), 404
+    active_count = conn.execute(
+        "SELECT COUNT(*) AS count FROM quests WHERE user_id = ? AND status = 'active'",
+        (user_id,),
+    ).fetchone()["count"]
+    return jsonify({
+        "id": user["id"],
+        "username": user["username"],
+        "email": user["email"],
+        "points": user["points"],
+        "quests_completed": user["quests_completed"],
+        "active_quests": active_count,
+    })
+
+
 @app.post("/api/quests/new")
 def create_quest():
     data = request.get_json(force=True)
@@ -102,10 +219,12 @@ def create_quest():
         return jsonify({"error": "user_id is required"}), 400
 
     conn = db.get_db()
-    conn.execute(
-        "UPDATE quests SET status = 'abandoned' WHERE user_id = ? AND status = 'active'",
+    active_count = conn.execute(
+        "SELECT COUNT(*) AS count FROM quests WHERE user_id = ? AND status = 'active'",
         (user_id,),
-    )
+    ).fetchone()["count"]
+    if active_count >= 6:
+        return jsonify({"error": "You can have up to 6 unfinished quests."}), 400
 
     recent_targets = [
         row["target"]
@@ -139,6 +258,40 @@ def create_quest():
         "SELECT * FROM quests WHERE id = ?", (cur.lastrowid,)
     ).fetchone()
     return jsonify(dict(new_quest))
+
+
+@app.post("/api/quests/select")
+def select_quest():
+    data = request.get_json(force=True)
+    user_id = data.get("user_id")
+    target = (data.get("target") or "").strip()
+    selected = next((quest for quest in QUEST_POOL if quest[0] == target), None)
+    if not user_id or selected is None:
+        return jsonify({"error": "a valid quest selection is required"}), 400
+
+    conn = db.get_db()
+    active_count = conn.execute(
+        "SELECT COUNT(*) AS count FROM quests WHERE user_id = ? AND status = 'active'",
+        (user_id,),
+    ).fetchone()["count"]
+    if active_count >= 6:
+        return jsonify({"error": "You can have up to 6 unfinished quests."}), 400
+
+    category, difficulty = selected[1], selected[2]
+    tier = DIFFICULTY_TIERS[difficulty]
+    import random
+    target_count = random.randint(*tier["count_range"])
+    points_reward = target_count * tier["points_per_item"] + tier["completion_bonus"]
+    cur = conn.execute(
+        "INSERT INTO quests "
+        "(user_id, target, category, difficulty, target_count, points_reward, "
+        "points_per_item, completion_bonus) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (user_id, target, category, difficulty, target_count, points_reward,
+         tier["points_per_item"], tier["completion_bonus"]),
+    )
+    conn.commit()
+    quest = conn.execute("SELECT * FROM quests WHERE id = ?", (cur.lastrowid,)).fetchone()
+    return jsonify(dict(quest))
 
 
 @app.post("/api/submit")

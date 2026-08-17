@@ -24,6 +24,12 @@ def close_db(_exc=None):
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     conn.executescript(SCHEMA_PATH.read_text())
+    # Keep existing local databases usable after adding account fields.
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(users)")}
+    if "email" not in columns:
+        conn.execute("ALTER TABLE users ADD COLUMN email TEXT")
+    if "password_hash" not in columns:
+        conn.execute("ALTER TABLE users ADD COLUMN password_hash TEXT")
     conn.commit()
     conn.close()
 

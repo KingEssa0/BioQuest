@@ -19,6 +19,11 @@ QUEST_POOL = [
     ("seeds ready to disperse, like a dandelion puff or maple seed", "plants", "hard"),
     ("a tree with peeling or unusual bark", "plants", "medium"),
     ("roots growing above ground", "plants", "medium"),
+    ("a plant with flowers of two or more colors", "plants", "medium"),
+    ("a tree with visible fruit, cones, or berries", "plants", "medium"),
+    ("a naturally patterned leaf with holes or insect damage", "plants", "hard"),
+    ("a plant pollinated by an insect, with the insect visible", "plants", "hard"),
+    ("a fallen log covered in multiple kinds of moss or fungi", "plants", "hard"),
 
     # --- Insects & arachnids --------------------------------------------
     ("insects", "invertebrates", "easy"),
@@ -35,6 +40,9 @@ QUEST_POOL = [
     ("a snail or slug", "invertebrates", "medium"),
     ("an earthworm", "invertebrates", "medium"),
     ("a cocoon or chrysalis", "invertebrates", "hard"),
+    ("an insect carrying food or building something", "invertebrates", "hard"),
+    ("two different kinds of insects in one photo", "invertebrates", "hard"),
+    ("a spider catching or wrapping prey", "invertebrates", "hard"),
 
     # --- Birds ------------------------------------------------------------
     ("birds", "birds", "easy"),
@@ -42,6 +50,9 @@ QUEST_POOL = [
     ("a bird's nest", "birds", "hard"),
     ("feathers", "birds", "medium"),
     ("a bird eating or foraging", "birds", "medium"),
+    ("two different bird species in one photo", "birds", "hard"),
+    ("a bird displaying colorful feathers", "birds", "hard"),
+    ("a bird nest with nesting material visible", "birds", "hard"),
 
     # --- Mammals ------------------------------------------------------
     ("squirrels or other small mammals", "mammals", "medium"),
@@ -49,12 +60,15 @@ QUEST_POOL = [
     ("evidence an animal has been eating something, like chewed leaves or nutshells", "mammals", "hard"),
     ("fur caught on a branch or fence", "mammals", "hard"),
     ("a burrow or animal den", "mammals", "hard"),
+    ("two different kinds of animal tracks", "mammals", "hard"),
+    ("a wild mammal interacting with its environment", "mammals", "hard"),
 
     # --- Reptiles & amphibians ---------------------------------------
     ("a lizard or salamander", "reptiles_amphibians", "hard"),
     ("a frog or toad", "reptiles_amphibians", "hard"),
     ("a snake, photographed from a safe distance", "reptiles_amphibians", "hard"),
     ("a turtle", "reptiles_amphibians", "hard"),
+    ("an amphibian hiding under natural cover", "reptiles_amphibians", "hard"),
 
     # --- Rocks, minerals & land features ------------------------------
     ("rocks or stones", "geology", "easy"),
@@ -63,6 +77,8 @@ QUEST_POOL = [
     ("a cliff, boulder, or rock formation", "geology", "medium"),
     ("a fossil or a shell", "geology", "hard"),
     ("a place where water meets land, like a shoreline or riverbank", "geology", "medium"),
+    ("visible layers in a cliff, rock, or exposed soil bank", "geology", "hard"),
+    ("three distinct types of rock in one outdoor scene", "geology", "hard"),
 
     # --- Water & weather -------------------------------------------------
     ("clouds", "weather", "easy"),
@@ -72,6 +88,8 @@ QUEST_POOL = [
     ("sunlight streaming through tree branches", "weather", "medium"),
     ("a shadow with an interesting shape", "weather", "easy"),
     ("ice or frost", "weather", "hard"),
+    ("a double rainbow", "weather", "hard"),
+    ("a dramatic weather pattern with sunlight and dark clouds", "weather", "hard"),
 
     # --- Patterns & textures ------------------------------------------
     ("something camouflaged in its environment", "patterns", "hard"),
@@ -86,12 +104,14 @@ QUEST_POOL = [
     ("a bird or animal adapted to city life", "urban_nature", "medium"),
     ("a garden or a planted flower bed", "urban_nature", "easy"),
     ("a bird feeder or insect hotel", "urban_nature", "medium"),
+    ("wildlife using a human-made structure as shelter", "urban_nature", "hard"),
+    ("three different kinds of urban nature in one photo", "urban_nature", "hard"),
 ]
 
 DIFFICULTY_TIERS = {
-    "easy": {"count_range": (2, 3), "points_per_item": 8, "completion_bonus": 15},
-    "medium": {"count_range": (1, 3), "points_per_item": 15, "completion_bonus": 25},
-    "hard": {"count_range": (1, 2), "points_per_item": 30, "completion_bonus": 50},
+    "easy": {"count_range": (2, 3), "points_per_item": 10, "completion_bonus": 20},
+    "medium": {"count_range": (1, 3), "points_per_item": 18, "completion_bonus": 30},
+    "hard": {"count_range": (1, 2), "points_per_item": 40, "completion_bonus": 75},
 }
 
 
