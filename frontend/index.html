@@ -24,12 +24,51 @@
     <h1>BioQuest</h1>
 
     <form id="form-login">
-      <label for="input-username">Choose a username</label>
-      <input id="input-username" name="username" type="text" maxlength="30" required />
-      <button id="btn-login" type="submit">Start Exploring</button>
+      <p id="auth-heading" class="auth-heading">Sign in to continue your adventure.</p>
+      <label for="input-email">Email address</label>
+      <input id="input-email" name="email" type="email" autocomplete="email" required />
+      <div id="signup-fields" hidden>
+        <label for="input-username">Username</label>
+        <input id="input-username" name="username" type="text" maxlength="30" autocomplete="username" />
+        <label for="input-password-confirm">Confirm password</label>
+        <input id="input-password-confirm" name="password-confirm" type="password" autocomplete="new-password" />
+      </div>
+      <label for="input-password">Password</label>
+      <input id="input-password" name="password" type="password" minlength="8" autocomplete="current-password" required />
+      <button id="btn-login" type="submit">Sign In</button>
+      <button id="btn-auth-toggle" class="nav-button" type="button">Create an account</button>
       <span id="error-login" class="error-message" role="alert"></span>
     </form>
 
+  </div>
+
+  <div class="screen" id="screen-dashboard" hidden>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">YOUR EXPLORER HUB</p>
+        <h1>Welcome back, <span id="dashboard-username"></span>!</h1>
+        <p>Keep exploring, completing quests, and learning about the world around you.</p>
+      </div>
+      <nav class="page-nav" aria-label="Main navigation">
+        <button class="nav-button" data-route="dashboard" type="button">Dashboard</button>
+        <button class="nav-button" data-route="quests" type="button">Quests</button>
+        <button class="nav-button" data-route="leaderboard" type="button">Leaderboard</button>
+        <button class="nav-button" data-route="settings" type="button">Settings</button>
+      </nav>
+    </header>
+
+    <section class="stats-grid" aria-label="Your BioQuest statistics">
+      <article class="stat-card"><span class="stat-icon">⭐</span><span class="stat-label">Total Points</span><strong id="stat-points">0</strong></article>
+      <article class="stat-card"><span class="stat-icon">🏆</span><span class="stat-label">Quests Completed</span><strong id="stat-completed">0</strong></article>
+      <article class="stat-card"><span class="stat-icon">🧭</span><span class="stat-label">Unfinished Quests</span><strong id="stat-active">0 / 6</strong></article>
+    </section>
+
+    <section class="dashboard-card">
+      <p class="eyebrow">YOUR JOURNEY</p>
+      <h2>Ready for your next discovery?</h2>
+      <p>Choose from six new challenges and build your nature knowledge one photo at a time.</p>
+      <button class="primary-button nav-button" data-route="quests" type="button">Browse Quests</button>
+    </section>
   </div>
 
   <div class="screen" id="screen-quest" hidden>
@@ -45,19 +84,20 @@
       </div>
 
       <div class="dashboard-actions">
-        <button id="btn-new-quest" type="button">
-          New Quest
-        </button>
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-button" data-route="dashboard" type="button">Dashboard</button>
+          <button class="nav-button" data-route="quests" type="button">Quests</button>
+          <button id="btn-leaderboard" type="button">
+            View Leaderboard
+          </button>
+          <button class="nav-button" data-route="settings" type="button">Settings</button>
+        </nav>
 
-        <button id="btn-leaderboard" type="button">
-          Leaderboard
-        </button>
-
-        <button id="btn-logout" type="button">
-          Log out
-        </button>
-
-        <button id="btn-theme">🌙 Dark Mode</button>
+        <div class="account-actions" aria-label="Account and appearance actions">
+          <button id="btn-logout" type="button">
+            Log Out
+          </button>
+        </div>
       </div>
     </header>
 
@@ -68,10 +108,32 @@
 
     <main>
 
+      <section class="quests-overview">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">YOUR QUEST BOARD</p>
+            <h2>Current Quests</h2>
+          </div>
+          <span id="quest-capacity" class="capacity-badge">0 / 6 unfinished</span>
+        </div>
+        <div id="active-quests-list" class="quest-list"></div>
+
+        <div class="section-heading new-quests-heading">
+          <div>
+            <p class="eyebrow">CHOOSE YOUR NEXT CHALLENGE</p>
+            <h2>New Quests</h2>
+          </div>
+          <span>Six options, one adventure</span>
+        </div>
+        <div id="quest-options-list" class="quest-list quest-options-list"></div>
+        <span id="error-options" class="error-message" role="alert"></span>
+      </section>
+
       <section id="quest-card">
 
         <div class="quest-header">
           <h2>Current Quest</h2>
+          <button id="btn-new-quest" type="button">New Quest</button>
         </div>
 
         <div class="quest-content">
@@ -128,7 +190,7 @@
 
       <section id="quest-empty" hidden>
 
-        <h2>No Active Quest</h2>
+        <h2>No Active Quest Yet</h2>
 
         <p>
           You don't have an active quest yet.
@@ -158,15 +220,17 @@
 
         <form id="form-submit">
 
-          <label for="input-photo">
-            Choose a photo
+          <label class="file-picker" for="input-photo">
+            <span class="file-picker-icon">📷</span>
+            <span>Choose a photo</span>
+            <input
+              id="input-photo"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+            />
           </label>
 
-          <input
-            id="input-photo"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-          />
+          <span id="file-name" class="file-name">No photo selected.</span>
 
           <button
             id="btn-submit"
@@ -198,6 +262,47 @@
 
   </div>
 
+  <div class="screen" id="screen-settings" hidden>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">PREFERENCES</p>
+        <h1>Settings</h1>
+        <p>Make BioQuest feel right for you.</p>
+      </div>
+      <nav class="page-nav" aria-label="Main navigation">
+        <button class="nav-button" data-route="dashboard" type="button">Dashboard</button>
+        <button class="nav-button" data-route="quests" type="button">Quests</button>
+        <button class="nav-button" data-route="leaderboard" type="button">Leaderboard</button>
+      </nav>
+    </header>
+    <section class="settings-card">
+      <p class="eyebrow">ACCOUNT</p>
+      <h2>Account details</h2>
+      <div class="settings-details">
+        <span>Email</span><strong id="settings-email">—</strong>
+        <span>Username</span><strong id="settings-username">—</strong>
+      </div>
+    </section>
+    <section class="settings-card">
+      <p class="eyebrow">APPEARANCE</p>
+      <h2>Appearance</h2>
+      <p>Choose how BioQuest looks while you explore.</p>
+      <button id="btn-theme" type="button">🌙 Dark Mode</button>
+    </section>
+    <section class="settings-card">
+      <p class="eyebrow">GAMEPLAY</p>
+      <h2>Gameplay preferences</h2>
+      <label class="setting-toggle"><input id="pref-tips" type="checkbox" checked /> Show exploration tips</label>
+      <label class="setting-toggle"><input id="pref-reduced-motion" type="checkbox" /> Reduce animations</label>
+    </section>
+    <section class="settings-card settings-danger">
+      <p class="eyebrow">SESSION</p>
+      <h2>Sign out</h2>
+      <p>Sign out of this BioQuest account on this device.</p>
+      <button id="btn-settings-logout" type="button">Log Out</button>
+    </section>
+  </div>
+
 
   <!-- =========================================================
        RESULT SCREEN
@@ -208,6 +313,12 @@
     id="screen-result"
     hidden
   >
+
+    <nav class="page-nav result-nav" aria-label="Main navigation">
+      <button class="nav-button" data-route="dashboard" type="button">Dashboard</button>
+      <button class="nav-button" data-route="quests" type="button">Quests</button>
+      <button class="nav-button" data-route="settings" type="button">Settings</button>
+    </nav>
 
     <main class="result-container">
 
@@ -289,10 +400,14 @@
           <div>
             <h1>Leaderboard</h1>
 
-            <p>
-              Top BioQuest explorers
-            </p>
+            <p>Top BioQuest explorers</p>
           </div>
+
+          <nav class="page-nav" aria-label="Main navigation">
+            <button class="nav-button" data-route="dashboard" type="button">Dashboard</button>
+            <button class="nav-button" data-route="quests" type="button">Quests</button>
+            <button class="nav-button" data-route="settings" type="button">Settings</button>
+          </nav>
 
         </header>
 

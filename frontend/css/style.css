@@ -71,7 +71,10 @@ h3 {
   box-shadow: 0 4px 15px rgba(18, 53, 36, 0.08);
 }
 
-#input-username {
+#input-email,
+#input-username,
+#input-password,
+#input-password-confirm {
   width: 100%;
   padding: 13px 15px;
   border: 1px solid #a9d5b9;
@@ -81,7 +84,10 @@ h3 {
   font-size: 16px;
 }
 
-#input-username:focus {
+#input-email:focus,
+#input-username:focus,
+#input-password:focus,
+#input-password-confirm:focus {
   outline: 2px solid #55c878;
   border-color: #55c878;
 }
@@ -89,6 +95,23 @@ h3 {
 #btn-login {
   width: 100%;
   margin-top: 12px;
+}
+
+#form-login label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+#form-login label:first-of-type {
+  margin-top: 0;
+}
+
+.auth-heading {
+  margin-top: 0;
+  color: #456454;
+  text-align: center;
 }
 
 /* =========================================================
@@ -129,6 +152,268 @@ button:disabled {
   transform: none;
 }
 
+/* Keep primary quest actions separate from account and appearance controls. */
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 18px;
+}
+
+.dashboard-actions,
+.quest-actions,
+.account-actions,
+.result-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dashboard-actions {
+  justify-content: flex-end;
+}
+
+.account-actions {
+  padding-left: 14px;
+  border-left: 1px solid #b5dcc4;
+}
+
+.quest-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+  color: #2d9b55;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+}
+
+.page-header > div > p:last-child,
+.dashboard-card > p:last-of-type {
+  max-width: 650px;
+  margin-bottom: 0;
+  color: #456454;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.result-nav {
+  width: min(1000px, 92%);
+  margin: 0 auto;
+  padding-top: 25px;
+}
+
+.nav-button,
+.small-button {
+  padding: 9px 13px;
+  background: #ffffff;
+  color: #123524;
+  border: 1px solid #b5dcc4;
+  font-size: 13px;
+}
+
+.nav-button:hover,
+.small-button:hover {
+  background: #edf8f1;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.stat-card,
+.dashboard-card,
+.settings-card {
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 5px 18px rgba(18, 53, 36, 0.08);
+}
+
+.settings-details {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px 18px;
+  margin-top: 18px;
+}
+
+.settings-details span {
+  color: #456454;
+}
+
+.setting-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.setting-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #55c878;
+}
+
+.settings-danger {
+  border-color: #e2b1a9;
+}
+
+.stat-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: center;
+}
+
+.stat-icon {
+  grid-row: span 2;
+  font-size: 30px;
+}
+
+.stat-label {
+  color: #456454;
+  font-size: 14px;
+}
+
+.stat-card strong {
+  font-size: 30px;
+}
+
+.dashboard-card {
+  margin-top: 18px;
+}
+
+.dashboard-card h2 {
+  margin-bottom: 6px;
+}
+
+.primary-button {
+  margin-top: 20px;
+  background: #55c878;
+  border-color: #55c878;
+}
+
+.quests-overview {
+  margin-bottom: 28px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.section-heading h2 {
+  margin-bottom: 0;
+}
+
+.section-heading > span:last-child {
+  color: #456454;
+  font-size: 14px;
+}
+
+.capacity-badge,
+.difficulty {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.capacity-badge {
+  background: #c6ead4;
+  color: #123524;
+}
+
+.quest-list {
+  display: grid;
+  gap: 11px;
+  margin-bottom: 30px;
+}
+
+.quest-list-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px 19px;
+  background: #e4f5ea;
+  border: 1px solid #b9dfc8;
+  border-radius: 14px;
+}
+
+.quest-list-card h3 {
+  margin: 7px 0 4px;
+  color: #123524;
+  font-size: 17px;
+}
+
+.quest-list-card p {
+  margin: 0;
+  color: #456454;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.difficulty-easy { background: #c6ead4; color: #14542d; }
+.difficulty-medium { background: #f6e4a8; color: #674e00; }
+.difficulty-hard { background: #f3c0b9; color: #70261f; }
+
+.empty-board {
+  margin: 0 0 30px;
+  padding: 18px;
+  border: 1px dashed #9bc9aa;
+  border-radius: 14px;
+  color: #456454;
+}
+
+.new-quests-heading {
+  margin-top: 28px;
+}
+
+.settings-card {
+  max-width: 680px;
+  margin-bottom: 20px;
+}
+
 /* Secondary buttons */
 
 #btn-leaderboard,
@@ -159,11 +444,9 @@ button:disabled {
   content: "Welcome, ";
 }
 
-#btn-new-quest,
 #btn-leaderboard,
 #btn-logout {
-  margin-right: 6px;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 /* =========================================================
@@ -248,28 +531,47 @@ button:disabled {
   padding: 25px;
 }
 
-#form-submit::before {
-  content: "Complete Your Quest";
-  display: block;
-
-  font-size: 24px;
+.file-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 17px;
+  border: 1px solid #55c878;
+  border-radius: 10px;
+  background: #55c878;
+  color: #123524;
   font-weight: bold;
-
-  margin-bottom: 5px;
-  color: #123524;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
-#form-submit::after {
-  content: "Find the target in the real world and take a photo.";
-  display: block;
-
-  margin-bottom: 18px;
-  color: #123524;
+.file-picker:hover {
+  background: #45b96a;
+  transform: translateY(-1px);
 }
 
-#input-photo {
-  margin-right: 15px;
-  color: #123524;
+.file-picker input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.file-picker-icon {
+  font-size: 18px;
+}
+
+.file-name {
+  display: inline-block;
+  max-width: 42%;
+  margin-left: 12px;
+  overflow: hidden;
+  color: #456454;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 /* =========================================================
@@ -279,7 +581,8 @@ button:disabled {
 #error-login,
 #error-quest,
 #error-submit,
-#error-leaderboard {
+#error-leaderboard,
+#error-options {
   display: block;
 
   margin-top: 10px;
@@ -396,14 +699,59 @@ button:disabled {
     padding: 22px;
   }
 
+  .dashboard-header {
+    display: block;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-nav {
+    justify-content: flex-start;
+  }
+
+  .result-nav {
+    padding-top: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .quest-list-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-actions {
+    justify-content: flex-start;
+    margin-top: 18px;
+  }
+
+  .account-actions {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .quest-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   #txt-target {
     font-size: 23px;
   }
 
-  #btn-new-quest,
   #btn-leaderboard,
   #btn-logout {
-    margin-bottom: 8px;
+    margin-bottom: 0;
   }
 
   #form-submit {
@@ -413,6 +761,18 @@ button:disabled {
   #input-photo {
     width: 100%;
     margin-bottom: 15px;
+  }
+
+  .file-picker {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .file-name {
+    display: block;
+    max-width: 100%;
+    margin: 0 0 15px;
+    text-align: center;
   }
 
   #btn-submit {
@@ -476,7 +836,109 @@ body.dark-theme #form-login {
   color: #f2fff6;
 }
 
-body.dark-theme #input-username {
+body.dark-theme .stat-card,
+body.dark-theme .dashboard-card,
+body.dark-theme .settings-card,
+body.dark-theme .quest-list-card {
+  background: #123d2b;
+  border-color: #245c40;
+  color: #f2fff6;
+}
+
+body.dark-theme .stat-label,
+body.dark-theme .page-header > div > p:last-child,
+body.dark-theme .dashboard-card > p:last-of-type,
+body.dark-theme .section-heading > span:last-child,
+body.dark-theme .quest-list-card p,
+body.dark-theme .empty-board,
+body.dark-theme .auth-heading {
+  color: #c9ebd7;
+}
+
+body.dark-theme .quest-list-card h3,
+body.dark-theme .settings-card h2,
+body.dark-theme .settings-details strong {
+  color: #f2fff6;
+}
+
+body.dark-theme .settings-details span {
+  color: #c9ebd7;
+}
+
+body.dark-theme .settings-danger {
+  border-color: #a85e55;
+}
+
+body.reduced-motion *,
+body.reduced-motion *::before,
+body.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+body.dark-theme .nav-button,
+body.dark-theme .small-button {
+  background: #1c4d37;
+  color: #f2fff6;
+  border-color: #397354;
+}
+
+body.dark-theme .nav-button:hover,
+body.dark-theme .small-button:hover {
+  background: #286448;
+}
+
+body.dark-theme .account-actions {
+  border-color: #397354;
+}
+
+body.dark-theme .capacity-badge {
+  background: #286448;
+  color: #f2fff6;
+}
+
+body.dark-theme .empty-board {
+  border-color: #397354;
+}
+
+body.dark-theme #quest-empty,
+body.dark-theme #form-submit,
+body.dark-theme #result-facts,
+body.dark-theme #screen-leaderboard td,
+body.dark-theme #screen-leaderboard p,
+body.dark-theme .quest-info-item,
+body.dark-theme .quest-label,
+body.dark-theme .file-name {
+  color: #e5fff0;
+}
+
+body.dark-theme .file-picker {
+  background: #62d98a;
+  border-color: #83eea5;
+  color: #082817;
+}
+
+body.dark-theme .file-picker:hover {
+  background: #7ae99e;
+}
+
+body.dark-theme #input-photo {
+  color: #e5fff0;
+}
+
+body.dark-theme #error-login,
+body.dark-theme #error-quest,
+body.dark-theme #error-submit,
+body.dark-theme #error-leaderboard {
+  color: #ffb4a9;
+}
+
+body.dark-theme #input-email,
+body.dark-theme #input-username,
+body.dark-theme #input-password,
+body.dark-theme #input-password-confirm {
   background: #f1fff6;
   color: #123524;
   border-color: #4c8f67;

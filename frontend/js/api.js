@@ -42,6 +42,24 @@ export async function getOrCreateUser(username) {
   return handleResponse(res);
 }
 
+export async function signUp(email, username, password) {
+  const res = await fetch(`${BASE_URL}/api/auth/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, username, password }),
+  });
+  return handleResponse(res);
+}
+
+export async function signIn(email, password) {
+  const res = await fetch(`${BASE_URL}/api/auth/signin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  return handleResponse(res);
+}
+
 // ---------------------------------------------------------------------------
 // QUESTS
 // ---------------------------------------------------------------------------
@@ -73,6 +91,30 @@ export async function getOrCreateUser(username) {
  */
 export async function getActiveQuest(userId) {
   const res = await fetch(`${BASE_URL}/api/quests/active?user_id=${userId}`);
+  return handleResponse(res);
+}
+
+export async function getActiveQuests(userId) {
+  const res = await fetch(`${BASE_URL}/api/quests/all?user_id=${userId}`);
+  return handleResponse(res);
+}
+
+export async function getQuestOptions(userId) {
+  const res = await fetch(`${BASE_URL}/api/quests/options?user_id=${userId}`);
+  return handleResponse(res);
+}
+
+export async function selectQuest(userId, target) {
+  const res = await fetch(`${BASE_URL}/api/quests/select`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId, target }),
+  });
+  return handleResponse(res);
+}
+
+export async function getUserStats(userId) {
+  const res = await fetch(`${BASE_URL}/api/users/${userId}/stats`);
   return handleResponse(res);
 }
 
@@ -176,10 +218,27 @@ export async function getLeaderboard() {
  * @returns {Promise<any>}
  */
 async function handleResponse(res) {
-  const data = await res.json();
+  const contentType = res.headers.get("content-type") || "";
+  // Read the body once so an empty response (or a proxy/server error page)
+  // produces a useful message instead of the browser's JSON parse exception.
+  const body = await res.text();
+  let data = null;
+  if (body.trim()) {
+    try {
+      data = JSON.parse(body);
+    } catch (_error) {
+      throw new Error(`The server returned invalid JSON (${res.status}). Restart Flask with: python app.py`);
+    }
+  }
+  if (!contentType.includes("application/json")) {
+    throw new Error(`The server returned an unexpected response (${res.status}). Restart Flask with: python app.py`);
+  }
   if (!res.ok) {
     const message = data?.error || `Request failed with status ${res.status}`;
     throw new Error(message);
+  }
+  if (data === null) {
+    throw new Error(`The server returned an empty response (${res.status}). Restart Flask with: python app.py`);
   }
   return data;
 }
